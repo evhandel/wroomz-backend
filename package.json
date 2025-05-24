@@ -12,6 +12,8 @@
     "prepare": "npm run build",
     "clean": "rm -rf dist",
     "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/app.ts",
+    "start": "ts-node src/app.ts",
+    "start:prod": "NODE_ENV=production node -r tsconfig-paths/register dist/app.js",
     "create-user": "ts-node src/scripts/createFirstUser.ts"
   },
   "keywords": [],
@@ -24,6 +26,7 @@
     "nodemon": "^3.1.0",
     "prettier": "^3.5.3",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.0.0"
   },
   "dependencies": {

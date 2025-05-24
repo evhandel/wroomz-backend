@@ -9,14 +9,15 @@ const isProd = process.env.NODE_ENV === "production";
 
 // Set the correct paths based on environment
 const entitiesPath = isProd
-  ? [path.join(__dirname, "..", "models", "**", "*.js")]
+  ? [path.join(__dirname, "dist", "models", "**", "*.js")]
   : ["src/models/**/*.ts"];
 
 const migrationsPath = isProd
-  ? [path.join(__dirname, "..", "migrations", "**", "*.js")]
+  ? [path.join(__dirname, "dist", "migrations", "**", "*.js")]
   : ["src/migrations/**/*.ts"];
 
-export const AppDataSource = new DataSource({
+// Только экспорт по умолчанию для TypeORM CLI
+export default new DataSource({
   type: "postgres",
   host: process.env.DB_HOST || "localhost",
   port: parseInt(process.env.DB_PORT || "5432"),
@@ -30,6 +31,3 @@ export const AppDataSource = new DataSource({
   migrations: migrationsPath,
   migrationsTableName: "migrations",
 });
-
-// Экспорт по умолчанию для совместимости с TypeORM CLI
-export default AppDataSource;

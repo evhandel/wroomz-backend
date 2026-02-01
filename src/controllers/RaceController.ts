@@ -9,7 +9,12 @@ export class RaceController {
   // Get all races
   static async getAllRaces(req: Request, res: Response) {
     try {
+      // Если пользователь авторизован (админ) - показываем все гонки
+      // Если нет - только опубликованные
+      const where = req.user ? {} : { isPublished: true };
+
       const races = await raceRepository.find({
+        where,
         relations: ["details"],
         order: {
           createdAt: "DESC", // Sort by creation date in descending order (newest first)
@@ -25,8 +30,15 @@ export class RaceController {
   static async getRaceById(req: Request, res: Response) {
     try {
       const { id } = req.params;
+
+      // Если пользователь авторизован (админ) - показываем любую гонку
+      // Если нет - только опубликованную
+      const where = req.user
+        ? { id: parseInt(id) }
+        : { id: parseInt(id), isPublished: true };
+
       const race = await raceRepository.findOne({
-        where: { id: parseInt(id) },
+        where,
         relations: ["details"],
       });
 

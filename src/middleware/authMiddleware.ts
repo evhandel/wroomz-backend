@@ -45,3 +45,31 @@ export const authMiddleware = (
     return;
   }
 };
+
+// Опциональная авторизация - не блокирует запрос, но добавляет user если токен валидный
+export const optionalAuthMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader) {
+      return next();
+    }
+
+    const parts = authHeader.split(" ");
+    if (parts.length !== 2 || parts[0] !== "Bearer") {
+      return next();
+    }
+
+    const token = parts[1];
+    const decoded = AuthService.verifyToken(token);
+    req.user = decoded;
+  } catch {
+    // Игнорируем ошибки - просто не устанавливаем user
+  }
+
+  next();
+};
